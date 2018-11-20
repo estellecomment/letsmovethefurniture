@@ -1,24 +1,70 @@
 import React, {Component} from 'react';
 import './App.css';
 
-const Meuble = function({rectangle}) {
-    return (
-        <div className="meuble"
-             style={{
-                 width: rectangle.width + "px",
-                 height: rectangle.height + "px",
-                 top: rectangle.y,
-                 left: rectangle.x
-             }}
-        />
-    );
+// props : rectangle
+class Meuble extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {x: props.rectangle.x, y: props.rectangle.y};
+    }
+
+    render() {
+        return (
+            <div className="meuble"
+                 style={{
+                     width: this.props.rectangle.width + "px",
+                     height: this.props.rectangle.height + "px",
+                     top: this.state.y + "px",
+                     left: this.state.x + "px"
+                 }}
+                 draggable="true"
+                 onDragStart={(e) => {
+                     console.log('onDragStart');
+                     console.log(e);
+                     console.log(e.clientX);
+                     console.log(e.clientY);
+                     this.dragStartPosition = {x: e.clientX, y: e.clientY};
+                 }}
+                 onDragEnd={(e) => {
+                     console.log('onDragEnd');
+                     console.log(e);
+                     let dragStopPosition = {x: e.clientX, y: e.clientY};
+                     console.log('dragStopPosition ', dragStopPosition);
+                     console.log('dragStartPosition ', this.dragStartPosition);
+
+                     let dragDiff = {
+                         x: e.clientX - this.dragStartPosition.x,
+                         y: e.clientY - this.dragStartPosition.y
+                     };
+                     console.log('dragdiff', dragDiff);
+
+                     this.setState((state) => {
+                         let newState = {x: state.x + dragDiff.x, y: state.y + dragDiff.y };
+                         console.log('newState', newState);
+                         return newState;
+                     })
+
+                 }}
+            />
+        );
+    }
 }
+
 
 const DrawingBox = function({width, height, children}) {
     let roomPercentageScale = 90;
     let drawingBoxHeight = Math.floor(height/roomPercentageScale*100);
     return (
-        <div className="drawing-box" style={{height: drawingBoxHeight + "px"}}>
+        <div className="drawing-box"
+             style={{height: drawingBoxHeight + "px"}}
+             onDragOver={(e) => { e.preventDefault(); }}
+             onDrop={(e) => {
+                 console.log('ondrop');
+                 console.log(e);
+                 console.log(e.clientX);
+                 console.log(e.clientY);
+             }}
+        >
             <div className="room"
                  style={{
                      height: height + "px",
@@ -48,8 +94,8 @@ class AddRectangleForm extends Component {
             width: this.widthInput.current.value,
             height: this.heightInput.current.value,
             id: this.idCounter,
-            x: Math.random() * 100 + "%",
-            y: Math.random() * 100 + "%"
+            x: 0,
+            y: 0
         };
         this.idCounter = this.idCounter + 1;
         console.log("new rectangle", newRectangle);
