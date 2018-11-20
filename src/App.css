@@ -30,3 +30,23 @@
     transform: rotate(360deg);
   }
 }
+
+.drawing-box {
+  background-color: pink;
+  position: relative; /* anything but static, so that the absolute children get positioned relative to it. */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.room {
+  position: absolute;
+  border: solid black 3px;
+}
+
+.meuble {
+  position: absolute;
+  background-color: blue;
+  border: solid black 1px;
+}

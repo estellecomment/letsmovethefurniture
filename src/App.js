@@ -1,89 +1,40 @@
 import React, {Component} from 'react';
 import './App.css';
 
-const maxHeight = 700; // because fuck it
-
 const Meuble = function({rectangle}) {
     return (
-        <rect width={rectangle.width}
-              height={rectangle.height}
-              x={rectangle.x}
-              y={rectangle.y}
-              style={{fill: "blue", strokeWidth: 1, stroke: "black"}}/>
-    );
-}
-
-const Room = function() {
-    return (
-        <rect margin="auto"
-              width='100%'
-              height="100%"
-              style={{fill: "none", strokeWidth: 3, stroke: "black"}}/>
+        <div className="meuble"
+             style={{
+                 width: rectangle.width + "px",
+                 height: rectangle.height + "px",
+                 top: rectangle.y,
+                 left: rectangle.x
+             }}
+        />
     );
 }
 
 const DrawingBox = function({width, height, children}) {
+    let roomPercentageScale = 90;
+    let drawingBoxHeight = Math.floor(height/roomPercentageScale*100);
     return (
-        <svg width={width} height={height}>
+        <div className="drawing-box" style={{height: drawingBoxHeight + "px"}}>
+            <div className="room"
+                 style={{
+                     height: height + "px",
+                     width: width + "px",
+                 }}/>
             {children}
-        </svg>
-    )
-}
-
-// width, height, furnitureList
-const DivDrawingBox = function({width, height, furnitureList}) {
-    return ( // height is ignored. don't know why.
-        <div height={maxHeight} display="flex" backgroundColor="pink">
         </div>
     )
 }
 
-let idCounter = 0;
-// functional component because no state.
-const AddRectangleForm = function ({title, submitText, addRectangleFunc}) {
-    console.log('running AddRectangleForm for', title);
-    let widthInput = React.createRef();
-    let heightInput = React.createRef();
-    let badCounter = 0; //initializing counter here resets it to zero at each callback. Because func has rerun (possible rendering update).
-
-    const handleSubmit = function (event) {
-        event.preventDefault();
-        const newRectangle = {
-            width: widthInput.current.value,
-            height: heightInput.current.value,
-            badId: badCounter,
-            id: idCounter
-        };
-        badCounter = badCounter + 1;
-        idCounter = idCounter + 1;
-        console.log("new rectangle", newRectangle);
-        addRectangleFunc(newRectangle);
-    };
-
-    // uncontrolled form because I'm not doing fancy validation.
-    return (
-        <form onSubmit={handleSubmit}>
-            <div>{title}</div>
-            <label>
-                Width:
-                <input type="number" ref={widthInput}/>
-            </label>
-            <label>
-                Height:
-                <input type="number" ref={heightInput}/>
-            </label>
-            <input type="submit" value={submitText}/>
-        </form>
-    )
-};
-
-// class component to test rendering differences
 // {title, submitText, addRectangleFunc}
-class AddRectangleFormClass extends Component {
+class AddRectangleForm extends Component {
     constructor(props) {
         super(props);
 
-        console.log('constructor AddRectangleFormClass for', this.props.title);
+        console.log('constructor AddRectangleForm for', this.props.title);
         this.widthInput = React.createRef();
         this.heightInput = React.createRef();
         this.idCounter = 0;
@@ -97,6 +48,8 @@ class AddRectangleFormClass extends Component {
             width: this.widthInput.current.value,
             height: this.heightInput.current.value,
             id: this.idCounter,
+            x: Math.random() * 100 + "%",
+            y: Math.random() * 100 + "%"
         };
         this.idCounter = this.idCounter + 1;
         console.log("new rectangle", newRectangle);
@@ -105,7 +58,7 @@ class AddRectangleFormClass extends Component {
 
     // uncontrolled form because I'm not doing fancy validation.
     render() {
-        console.log('rendering AddRectangleFormClass for', this.props.title);
+        console.log('rendering AddRectangleForm for', this.props.title);
         return (
         <form onSubmit={this.handleSubmit}>
             <div>{this.props.title}</div>
@@ -126,10 +79,13 @@ class AddRectangleFormClass extends Component {
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {furnitureList: [], room: {width: 600, height: 700}};
+        const defaultRoomHeight = 500;
+        const defaultRoomWidth = 700;
+        this.state = {furnitureList: [], room: {width: defaultRoomWidth, height: defaultRoomHeight}};
     }
 
     render() {
+
         const addFurniture = (newRectangle) => {
             console.log('setting state : new furniture piece', newRectangle);
             this.setState(oldState => {
@@ -145,12 +101,10 @@ class App extends Component {
 
         return (
             <div className="App">
-                <AddRectangleFormClass addRectangleFunc={drawRoom} title="Room size" submitText="Set Room Size"/>
-                <AddRectangleFormClass addRectangleFunc={addFurniture} title="Furniture" submitText="Add Furniture"/>
+                <AddRectangleForm addRectangleFunc={drawRoom} title="Room size" submitText="Set Room Size"/>
+                <AddRectangleForm addRectangleFunc={addFurniture} title="Furniture" submitText="Add Furniture"/>
 
                 <DrawingBox width={this.state.room.width} height={this.state.room.height}>
-                    <Room/>
-
                     {this.state.furnitureList.map((rectangle) => (
                         <Meuble key={rectangle.id} rectangle={rectangle}/>
                     ))}
