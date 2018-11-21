@@ -183,6 +183,11 @@ class App extends Component {
             this.setState({room: roomRectangle});
         };
 
+        const clearFurniture = () => {
+            console.log('clearing furniture');
+            this.setState({furnitureList: []});
+        };
+
         return (
             <div className="App">
                 <AddRectangleForm addRectangleFunc={drawRoom}
@@ -192,6 +197,10 @@ class App extends Component {
                 <AddRectangleForm addRectangleFunc={addFurniture}
                                   title="Furniture (cm)"
                                   submitText="Add Furniture"/>
+
+                <form onSubmit={clearFurniture}>
+                    <input type="submit" value="Remove all furniture"/>
+                </form>
 
                 <DrawingBox room={this.state.room} >
                     {this.state.furnitureList.map((rectangle) => (
