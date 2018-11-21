@@ -1,7 +1,5 @@
 import React from "react";
 
-import Trash from "./Trash";
-
 const ScaleBar = function({oneMeterPx}) {
     return (
         <div className="scale">
@@ -13,7 +11,7 @@ const ScaleBar = function({oneMeterPx}) {
     );
 };
 
-const DrawingBox = function({room, pxPerCm, onTrashedEvent, children}) {
+const DrawingBox = function({room, pxPerCm, children}) {
     let roomPx = { width: room.width * pxPerCm, height: room.height * pxPerCm };
 
     let roomSizePercent = 90; // room fills X percent of drawingBox
@@ -34,7 +32,6 @@ const DrawingBox = function({room, pxPerCm, onTrashedEvent, children}) {
                          width: roomPx.width + "px",
                      }}/>
                 <div className="bottom-bar">
-                    <Trash onTrashedEvent={onTrashedEvent}/>
                     <ScaleBar oneMeterPx={pxPerCm * 100}/>
                 </div>
                 {children}

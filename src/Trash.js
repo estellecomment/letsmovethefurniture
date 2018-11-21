@@ -1,7 +1,7 @@
 import {Component} from "react";
 import React from "react";
 
-// onTrashedEvent(id)
+// onTrashedEvent(trashedId)
 class Trash extends Component {
     constructor(props) {
         super(props);
@@ -29,10 +29,11 @@ class Trash extends Component {
                      e.preventDefault();
                      console.log('drop on trash');
                      let meubleId = e.dataTransfer.getData("text/plain");
+                     this.setState({isDraggedOver: false});
                      this.props.onTrashedEvent(meubleId);
                  }}
             >
-                Trash
+                <img alt="trash" src={"/trash-64.png"} />
             </div>
         );
     }

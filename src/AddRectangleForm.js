@@ -41,7 +41,7 @@ class AddRectangleForm extends Component {
     render() {
         console.log('rendering AddRectangleForm for', this.props.title);
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form className="top-bar-column" onSubmit={this.handleSubmit}>
                 <div>{this.props.title}</div>
                 <div className="form-body">
                     <label>

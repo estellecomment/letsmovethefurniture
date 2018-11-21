@@ -5,6 +5,7 @@ import DrawingBox from "./DrawingBox";
 import Meuble from './Meuble';
 
 import './App.css';
+import Trash from "./Trash";
 
 
 class App extends Component {
@@ -68,24 +69,27 @@ class App extends Component {
                         <div>Let's move the furniture!</div>
                     </div>
                     <AddRectangleForm addRectangleFunc={drawRoom}
-                                      title="Room size (cm)"
+                                      title="Set room size (cm)"
                                       submitText="Set Room Size"
                                       initValues={{width: this.state.room.width, height: this.state.room.height}}/>
                     <AddRectangleForm addRectangleFunc={addFurniture}
-                                      title="Furniture (cm)"
+                                      title="Create furniture (cm)"
                                       withName={true}
                                       submitText="Add Furniture"/>
 
-                    <form onSubmit={clearFurniture}>
-                        <input type="submit" value="Remove all furniture"/>
-                    </form>
+                    <div className="top-bar-column">
+                        <div>Remove furniture</div>
+                        <Trash onTrashedEvent={removeMeuble}/>
+                        <form onSubmit={clearFurniture}>
+                            <input type="submit" value="Remove all furniture"/>
+                        </form>
+                    </div>
                 </div>
-                <div>Double click furniture to rotate</div>
+                <div>Double click furniture to rotate it, drag it to trash can to remove it</div>
 
                 <DrawingBox
                     room={this.state.room}
                     pxPerCm={this.state.pxPerCm}
-                    onTrashedEvent={removeMeuble}
                 >
                     {this.state.furnitureList.map((rectangle) => (
                         <Meuble key={rectangle.id} rectangle={rectangle} pxPerCm={this.state.pxPerCm}/>

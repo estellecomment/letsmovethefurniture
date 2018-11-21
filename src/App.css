@@ -95,16 +95,14 @@
   align-content: center;
 }
 
-form {
+.top-bar-column {
   margin: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .form-body {
-  flex-grow: 10;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
