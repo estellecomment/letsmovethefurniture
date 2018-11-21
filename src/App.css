@@ -65,7 +65,7 @@
 
 .meuble {
   position: absolute;
-  background-color: blue;
+  background-color: #62c0f8;
   border: solid black 1px;
   color: white;
 
@@ -109,4 +109,9 @@ form {
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
+}
+
+.is-dragged-over {
+  background-color: black;
+  color: white;
 }

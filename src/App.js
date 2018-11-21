@@ -50,6 +50,16 @@ class App extends Component {
             this.setState({furnitureList: []});
         };
 
+        const removeMeuble = (meubleId) => {
+            console.log('removing meuble', meubleId);
+            this.setState((state) => {
+                let listWithoutMeuble = state.furnitureList.filter((meuble) => {
+                    return ("" + meuble.id) !== ("" + meubleId); // cast to string
+                });
+                return {furnitureList: listWithoutMeuble};
+            });
+        };
+
         return (
             <div className="App">
                 <div className="top-bar">
@@ -72,7 +82,11 @@ class App extends Component {
                 </div>
                 <div>Double click furniture to rotate</div>
 
-                <DrawingBox room={this.state.room} pxPerCm={this.state.pxPerCm}>
+                <DrawingBox
+                    room={this.state.room}
+                    pxPerCm={this.state.pxPerCm}
+                    onTrashedEvent={removeMeuble}
+                >
                     {this.state.furnitureList.map((rectangle) => (
                         <Meuble key={rectangle.id} rectangle={rectangle} pxPerCm={this.state.pxPerCm}/>
                     ))}

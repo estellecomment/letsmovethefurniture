@@ -37,15 +37,13 @@ class Meuble extends Component {
                  }}
                  draggable="true"
                  onDragStart={(e) => {
-                     console.log('onDragStart');
-                     console.log(e);
-                     console.log(e.clientX);
-                     console.log(e.clientY);
+                     console.log('onDragStart', this.props.rectangle.id, e.clientX, e.clientY);
                      this.dragStartPosition = {x: e.clientX, y: e.clientY};
+                     // set meuble id in event so that the drop target can get it.
+                     e.dataTransfer.setData('text/plain', this.props.rectangle.id);
                  }}
                  onDragEnd={(e) => {
                      console.log('onDragEnd');
-                     console.log(e);
                      let dragStopPosition = {x: e.clientX, y: e.clientY};
                      console.log('dragStopPosition ', dragStopPosition);
                      console.log('dragStartPosition ', this.dragStartPosition);
@@ -65,7 +63,6 @@ class Meuble extends Component {
                  }}
                  onDoubleClick={(e) => {
                      console.log('ondblclick');
-                     console.log(e);
                      this.rotate();
                  }}
             >
