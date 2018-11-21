@@ -5,13 +5,28 @@ import './App.css';
 class Meuble extends Component {
     constructor(props) {
         super(props);
-        this.state = {x: props.rectangle.x, y: props.rectangle.y};
+        this.state = {
+            x: props.rectangle.x,
+            y: props.rectangle.y,
+            width: props.rectangle.width,
+            height: props.rectangle.height
+        };
+    }
+
+    rotate() {
+        this.setState((state) => {
+            return { width: state.height, height: state.width }
+        });
+    }
+
+    componentWillUnmount() {
+        console.log('unmounting meuble', this.props.rectangle.name);
     }
 
     render() {
         let rectanglePx = {
-            width: this.props.rectangle.width * this.props.pxPerCm,
-            height: this.props.rectangle.height * this.props.pxPerCm
+            width: this.state.width * this.props.pxPerCm,
+            height: this.state.height * this.props.pxPerCm
         };
         return (
             <div className="meuble"
@@ -49,16 +64,21 @@ class Meuble extends Component {
                      })
 
                  }}
+                 onDoubleClick={(e) => {
+                     console.log('ondblclick');
+                     console.log(e);
+                     this.rotate();
+                 }}
             >
                 <div>{this.props.rectangle.name}</div>
-                <div className="width">{this.props.rectangle.width} cm</div>
-                <div className="height">{this.props.rectangle.height} cm</div>
+                <div className="meuble-width">{this.state.width} cm</div>
+                <div className="meuble-height">{this.state.height} cm</div>
             </div>
         );
     }
 }
 
-const Scale = function({oneMeterPx}) {
+const ScaleBar = function({oneMeterPx}) {
     return (
         <div className="scale-container">
             <div className="scale">
@@ -94,7 +114,7 @@ const DrawingBox = function({room, pxPerCm, children}) {
                          height: roomPx.height + "px",
                          width: roomPx.width + "px",
                      }}/>
-                <Scale oneMeterPx={pxPerCm * 100}/>
+                <ScaleBar oneMeterPx={pxPerCm * 100}/>
                 {children}
             </div>
         </div>
@@ -115,6 +135,10 @@ class AddRectangleForm extends Component {
         this.idCounter = 0;
 
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentWillUnmount() {
+        console.log('unmounting AddRectangleForm for', this.props.title);
     }
 
     handleSubmit(event) {
@@ -140,22 +164,24 @@ class AddRectangleForm extends Component {
         return (
         <form onSubmit={this.handleSubmit}>
             <div>{this.props.title}</div>
-            <label>
-                Width:
-                <input type="number" ref={this.widthInput} defaultValue={this.props.initValues ? this.props.initValues.width : ""}/>
-            </label>
-            <label>
-                Height:
-                <input type="number" ref={this.heightInput} defaultValue={this.props.initValues ? this.props.initValues.height : ""}/>
-            </label>
-            {
-                this.props.withName &&
+            <div className="form-body">
                 <label>
-                    Name:
-                    <input type="text" ref={this.nameInput} />
+                    Width:
+                    <input type="number" ref={this.widthInput} defaultValue={this.props.initValues ? this.props.initValues.width : ""}/>
                 </label>
-            }
-            <input type="submit" value={this.props.submitText}/>
+                <label>
+                    Height:
+                    <input type="number" ref={this.heightInput} defaultValue={this.props.initValues ? this.props.initValues.height : ""}/>
+                </label>
+                {
+                    this.props.withName &&
+                    <label>
+                        Name:
+                        <input type="text" ref={this.nameInput} />
+                    </label>
+                }
+            </div>
+            <input className="submit" type="submit" value={this.props.submitText}/>
         </form>
         )
     };
@@ -164,9 +190,23 @@ class AddRectangleForm extends Component {
 class App extends Component {
     constructor(props) {
         super(props);
-        const defaultRoomHeight = 500;
-        const defaultRoomWidth = 700;
-        this.state = {furnitureList: [], room: {width: defaultRoomWidth, height: defaultRoomHeight}, pxPerCm: 1};
+        this.defaultRoomSize = { width: 700, height: 500 };
+        this.maxRoomSizePx = { width: 800, height: 600 };
+        this.state = {
+            furnitureList: [],
+            room: this.defaultRoomSize,
+            pxPerCm: this.computeScale(this.defaultRoomSize)
+        };
+    }
+
+    computeScale(room) {
+        // Stretch width to max
+        let pxPerCm = this.maxRoomSizePx.width / room.width;
+        // Reduce scale if height is too big
+        if (room.height * pxPerCm > this.maxRoomSizePx.height) {
+            pxPerCm = this.maxRoomSizePx.height / room.height;
+        }
+        return pxPerCm;
     }
 
     render() {
@@ -179,50 +219,40 @@ class App extends Component {
             });
         }
 
-        const computeScale = function(room) {
-            let maxRoomSizePx = { width: 800, height: 650 };
-            let pxPerCm = 1;
-            if (room.width * pxPerCm > maxRoomSizePx.width) {
-                pxPerCm = maxRoomSizePx.width / room.width;
-            }
-            if (room.height * pxPerCm > maxRoomSizePx.height) {
-                pxPerCm = maxRoomSizePx.height / room.height;
-            }
-            return pxPerCm;
-        }
-
         const drawRoom = (roomRectangle) => {
             console.log('setting state : new room', roomRectangle);
-            this.setState({room: roomRectangle, pxPerCm: computeScale(roomRectangle) });
+            this.setState({room: roomRectangle, pxPerCm: this.computeScale(roomRectangle) });
         };
 
-        const clearFurniture = () => {
+        const clearFurniture = (e) => {
+            e.preventDefault();
             console.log('clearing furniture');
             this.setState({furnitureList: []});
         };
 
         return (
             <div className="App">
-                <AddRectangleForm addRectangleFunc={drawRoom}
-                                  title="Room size (cm)"
-                                  submitText="Set Room Size"
-                                  initValues={{width: this.state.room.width, height: this.state.room.height}}/>
-                <AddRectangleForm addRectangleFunc={addFurniture}
-                                  title="Furniture (cm)"
-                                  withName={true}
-                                  submitText="Add Furniture"/>
+                <div className="forms-container">
+                    <AddRectangleForm addRectangleFunc={drawRoom}
+                                      title="Room size (cm)"
+                                      submitText="Set Room Size"
+                                      initValues={{width: this.state.room.width, height: this.state.room.height}}/>
+                    <AddRectangleForm addRectangleFunc={addFurniture}
+                                      title="Furniture (cm)"
+                                      withName={true}
+                                      submitText="Add Furniture"/>
 
-                <form onSubmit={clearFurniture}>
-                    <input type="submit" value="Remove all furniture"/>
-                </form>
+                    <form onSubmit={clearFurniture}>
+                        <input type="submit" value="Remove all furniture"/>
+                    </form>
+                </div>
+                <div>Double click furniture to rotate</div>
 
                 <DrawingBox room={this.state.room} pxPerCm={this.state.pxPerCm}>
                     {this.state.furnitureList.map((rectangle) => (
                         <Meuble key={rectangle.id} rectangle={rectangle} pxPerCm={this.state.pxPerCm}/>
                     ))}
                 </DrawingBox>
-
-                <button onClick={()=> this.setState({})}>setState()</button>
             </div>
         );
     }
