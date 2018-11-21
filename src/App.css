@@ -50,13 +50,13 @@
   border: solid black 3px;
 }
 
-.scale-container {
+.bottom-bar {
   margin-top: 10px;
   width: 100%;
 
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .scale-line {

@@ -80,16 +80,20 @@ class Meuble extends Component {
 
 const ScaleBar = function({oneMeterPx}) {
     return (
-        <div className="scale-container">
             <div className="scale">
                 <div className="scale-line"
                      style={{height: "0px", width:oneMeterPx + "px"}}
                 />
                 <div>1 m</div>
             </div>
-        </div>
     );
 };
+
+const Trash = function() {
+    return (
+        <div>Trash</div>
+    );
+}
 
 const DrawingBox = function({room, pxPerCm, children}) {
     let roomPx = { width: room.width * pxPerCm, height: room.height * pxPerCm };
@@ -114,7 +118,10 @@ const DrawingBox = function({room, pxPerCm, children}) {
                          height: roomPx.height + "px",
                          width: roomPx.width + "px",
                      }}/>
-                <ScaleBar oneMeterPx={pxPerCm * 100}/>
+                <div className="bottom-bar">
+                    <Trash/>
+                    <ScaleBar oneMeterPx={pxPerCm * 100}/>
+                </div>
                 {children}
             </div>
         </div>
@@ -234,7 +241,7 @@ class App extends Component {
             <div className="App">
                 <div className="top-bar">
                     <div>
-                        <img src={"/sofa-128.png"} />
+                        <img alt="sofa" src={"/sofa-128.png"} />
                         <div>Let's move the furniture!</div>
                     </div>
                     <AddRectangleForm addRectangleFunc={drawRoom}
