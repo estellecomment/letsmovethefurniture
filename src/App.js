@@ -232,7 +232,11 @@ class App extends Component {
 
         return (
             <div className="App">
-                <div className="forms-container">
+                <div className="top-bar">
+                    <div>
+                        <img src={"/sofa-128.png"} />
+                        <div>Let's move the furniture!</div>
+                    </div>
                     <AddRectangleForm addRectangleFunc={drawRoom}
                                       title="Room size (cm)"
                                       submitText="Set Room Size"

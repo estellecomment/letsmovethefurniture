@@ -88,7 +88,7 @@
   width: 100%;
 }
 
-.forms-container {
+.top-bar {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -107,5 +107,6 @@ form {
 
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-end;
 }
