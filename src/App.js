@@ -49,7 +49,11 @@ class Meuble extends Component {
                      })
 
                  }}
-            />
+            >
+                <div>{this.props.rectangle.name}</div>
+                <div className="width">{this.props.rectangle.width} cm</div>
+                <div className="height">{this.props.rectangle.height} cm</div>
+            </div>
         );
     }
 }
@@ -97,7 +101,7 @@ const DrawingBox = function({room, pxPerCm, children}) {
     )
 }
 
-// {title, submitText, addRectangleFunc, [initValues]}
+// {title, submitText, addRectangleFunc, [initValues, withName]}
 class AddRectangleForm extends Component {
     constructor(props) {
         super(props);
@@ -105,6 +109,9 @@ class AddRectangleForm extends Component {
         console.log('constructor AddRectangleForm for', this.props.title);
         this.widthInput = React.createRef();
         this.heightInput = React.createRef();
+        if (this.props.withName) {
+            this.nameInput = React.createRef();
+        }
         this.idCounter = 0;
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -119,6 +126,9 @@ class AddRectangleForm extends Component {
             x: 0,
             y: 0
         };
+        if (this.nameInput) {
+            newRectangle.name = this.nameInput.current.value;
+        }
         this.idCounter = this.idCounter + 1;
         console.log("new rectangle", newRectangle);
         this.props.addRectangleFunc(newRectangle);
@@ -138,6 +148,13 @@ class AddRectangleForm extends Component {
                 Height:
                 <input type="number" ref={this.heightInput} defaultValue={this.props.initValues ? this.props.initValues.height : ""}/>
             </label>
+            {
+                this.props.withName &&
+                <label>
+                    Name:
+                    <input type="text" ref={this.nameInput} />
+                </label>
+            }
             <input type="submit" value={this.props.submitText}/>
         </form>
         )
@@ -192,6 +209,7 @@ class App extends Component {
                                   initValues={{width: this.state.room.width, height: this.state.room.height}}/>
                 <AddRectangleForm addRectangleFunc={addFurniture}
                                   title="Furniture (cm)"
+                                  withName={true}
                                   submitText="Add Furniture"/>
 
                 <form onSubmit={clearFurniture}>
