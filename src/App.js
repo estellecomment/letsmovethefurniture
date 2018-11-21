@@ -9,10 +9,9 @@ class Meuble extends Component {
     }
 
     render() {
-        let pxPerCm = 1; // fixed for now
         let rectanglePx = {
-            width: this.props.rectangle.width * pxPerCm,
-            height: this.props.rectangle.height * pxPerCm
+            width: this.props.rectangle.width * this.props.pxPerCm,
+            height: this.props.rectangle.height * this.props.pxPerCm
         };
         return (
             <div className="meuble"
@@ -68,25 +67,10 @@ const Scale = function({oneMeterPx}) {
     );
 };
 
-const DrawingBox = function({room, children}) {
-    let maxRoomSizePx = { width: 800, height: 650 };
+const DrawingBox = function({room, pxPerCm, children}) {
+    let roomPx = { width: room.width * pxPerCm, height: room.height * pxPerCm };
+
     let roomSizePercent = 90; // room fills X percent of drawingBox
-
-    const computeRoomPx = function(room, pxPerCm) {
-        return { width: room.width * pxPerCm, height: room.height * pxPerCm };
-    };
-
-    let pxPerCm = 1;
-    let roomPx = computeRoomPx(room, pxPerCm);
-    if (roomPx.width > maxRoomSizePx.width) {
-        pxPerCm = maxRoomSizePx.width / room.width;
-        roomPx = computeRoomPx(room, pxPerCm);
-    }
-    if (roomPx.height > maxRoomSizePx.height) {
-        pxPerCm = maxRoomSizePx.height / room.height;
-        roomPx = computeRoomPx(room, pxPerCm);
-    }
-
     let drawingBoxHeightPx = Math.floor(roomPx.height/roomSizePercent*100);
     return (
         <div className="drawing-box"
@@ -165,7 +149,7 @@ class App extends Component {
         super(props);
         const defaultRoomHeight = 500;
         const defaultRoomWidth = 700;
-        this.state = {furnitureList: [], room: {width: defaultRoomWidth, height: defaultRoomHeight}};
+        this.state = {furnitureList: [], room: {width: defaultRoomWidth, height: defaultRoomHeight}, pxPerCm: 1};
     }
 
     render() {
@@ -178,9 +162,21 @@ class App extends Component {
             });
         }
 
+        const computeScale = function(room) {
+            let maxRoomSizePx = { width: 800, height: 650 };
+            let pxPerCm = 1;
+            if (room.width * pxPerCm > maxRoomSizePx.width) {
+                pxPerCm = maxRoomSizePx.width / room.width;
+            }
+            if (room.height * pxPerCm > maxRoomSizePx.height) {
+                pxPerCm = maxRoomSizePx.height / room.height;
+            }
+            return pxPerCm;
+        }
+
         const drawRoom = (roomRectangle) => {
             console.log('setting state : new room', roomRectangle);
-            this.setState({room: roomRectangle});
+            this.setState({room: roomRectangle, pxPerCm: computeScale(roomRectangle) });
         };
 
         const clearFurniture = () => {
@@ -202,9 +198,9 @@ class App extends Component {
                     <input type="submit" value="Remove all furniture"/>
                 </form>
 
-                <DrawingBox room={this.state.room} >
+                <DrawingBox room={this.state.room} pxPerCm={this.state.pxPerCm}>
                     {this.state.furnitureList.map((rectangle) => (
-                        <Meuble key={rectangle.id} rectangle={rectangle}/>
+                        <Meuble key={rectangle.id} rectangle={rectangle} pxPerCm={this.state.pxPerCm}/>
                     ))}
                 </DrawingBox>
 
