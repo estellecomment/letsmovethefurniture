@@ -9,11 +9,16 @@ class Meuble extends Component {
     }
 
     render() {
+        let pxPerCm = 1; // fixed for now
+        let rectanglePx = {
+            width: this.props.rectangle.width * pxPerCm,
+            height: this.props.rectangle.height * pxPerCm
+        };
         return (
             <div className="meuble"
                  style={{
-                     width: this.props.rectangle.width + "px",
-                     height: this.props.rectangle.height + "px",
+                     width: rectanglePx.width + "px",
+                     height: rectanglePx.height + "px",
                      top: this.state.y + "px",
                      left: this.state.x + "px"
                  }}
@@ -50,13 +55,42 @@ class Meuble extends Component {
     }
 }
 
+const Scale = function({oneMeterPx}) {
+    return (
+        <div className="scale-container">
+            <div className="scale">
+                <div className="scale-line"
+                     style={{height: "0px", width:oneMeterPx + "px"}}
+                />
+                <div>1 m</div>
+            </div>
+        </div>
+    );
+};
 
-const DrawingBox = function({width, height, children}) {
-    let roomPercentageScale = 90;
-    let drawingBoxHeight = Math.floor(height/roomPercentageScale*100);
+const DrawingBox = function({room, children}) {
+    let maxRoomSizePx = { width: 800, height: 650 };
+    let roomSizePercent = 90; // room fills X percent of drawingBox
+
+    const computeRoomPx = function(room, pxPerCm) {
+        return { width: room.width * pxPerCm, height: room.height * pxPerCm };
+    };
+
+    let pxPerCm = 1;
+    let roomPx = computeRoomPx(room, pxPerCm);
+    if (roomPx.width > maxRoomSizePx.width) {
+        pxPerCm = maxRoomSizePx.width / room.width;
+        roomPx = computeRoomPx(room, pxPerCm);
+    }
+    if (roomPx.height > maxRoomSizePx.height) {
+        pxPerCm = maxRoomSizePx.height / room.height;
+        roomPx = computeRoomPx(room, pxPerCm);
+    }
+
+    let drawingBoxHeightPx = Math.floor(roomPx.height/roomSizePercent*100);
     return (
         <div className="drawing-box"
-             style={{height: drawingBoxHeight + "px"}}
+             style={{height: drawingBoxHeightPx + "px"}}
              onDragOver={(e) => { e.preventDefault(); }}
              onDrop={(e) => {
                  console.log('ondrop');
@@ -65,17 +99,21 @@ const DrawingBox = function({width, height, children}) {
                  console.log(e.clientY);
              }}
         >
-            <div className="room"
-                 style={{
-                     height: height + "px",
-                     width: width + "px",
-                 }}/>
-            {children}
+            <div className="width-container"
+                 style={{width: roomPx.width + "px"}}>
+                <div className="room"
+                     style={{
+                         height: roomPx.height + "px",
+                         width: roomPx.width + "px",
+                     }}/>
+                <Scale oneMeterPx={pxPerCm * 100}/>
+                {children}
+            </div>
         </div>
     )
 }
 
-// {title, submitText, addRectangleFunc}
+// {title, submitText, addRectangleFunc, [initValues]}
 class AddRectangleForm extends Component {
     constructor(props) {
         super(props);
@@ -110,11 +148,11 @@ class AddRectangleForm extends Component {
             <div>{this.props.title}</div>
             <label>
                 Width:
-                <input type="number" ref={this.widthInput}/>
+                <input type="number" ref={this.widthInput} defaultValue={this.props.initValues ? this.props.initValues.width : ""}/>
             </label>
             <label>
                 Height:
-                <input type="number" ref={this.heightInput}/>
+                <input type="number" ref={this.heightInput} defaultValue={this.props.initValues ? this.props.initValues.height : ""}/>
             </label>
             <input type="submit" value={this.props.submitText}/>
         </form>
@@ -147,10 +185,15 @@ class App extends Component {
 
         return (
             <div className="App">
-                <AddRectangleForm addRectangleFunc={drawRoom} title="Room size" submitText="Set Room Size"/>
-                <AddRectangleForm addRectangleFunc={addFurniture} title="Furniture" submitText="Add Furniture"/>
+                <AddRectangleForm addRectangleFunc={drawRoom}
+                                  title="Room size (cm)"
+                                  submitText="Set Room Size"
+                                  initValues={{width: this.state.room.width, height: this.state.room.height}}/>
+                <AddRectangleForm addRectangleFunc={addFurniture}
+                                  title="Furniture (cm)"
+                                  submitText="Add Furniture"/>
 
-                <DrawingBox width={this.state.room.width} height={this.state.room.height}>
+                <DrawingBox room={this.state.room} >
                     {this.state.furnitureList.map((rectangle) => (
                         <Meuble key={rectangle.id} rectangle={rectangle}/>
                     ))}

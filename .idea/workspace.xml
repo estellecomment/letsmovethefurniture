@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74f15093-69de-4ad4-9bca-7f721720848d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -45,14 +45,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="css" value="275" />
-          <entry key="js" value="6515" />
+          <entry key="css" value="486" />
+          <entry key="js" value="7839" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CSS" value="275" />
-          <entry key="JavaScript" value="6515" />
+          <entry key="CSS" value="486" />
+          <entry key="JavaScript" value="7839" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -63,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="96" selection-start-line="96" selection-end-line="96" />
+            <state relative-caret-position="275">
+              <caret line="79" selection-start-line="79" selection-end-line="79" />
             </state>
           </provider>
         </entry>
@@ -72,8 +72,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="501">
-              <caret line="51" selection-start-line="51" selection-end-line="51" />
+            <state relative-caret-position="347">
+              <caret line="58" column="24" lean-forward="true" selection-start-line="58" selection-end-line="59" />
             </state>
           </provider>
         </entry>
@@ -87,6 +87,8 @@
       <find>extends</find>
       <find>class</find>
       <find>AddRectangleForm</find>
+      <find>initvalues</find>
+      <find>DrawingBox</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -185,12 +187,12 @@
       <option name="presentableId" value="Default" />
       <updated>1540834848143</updated>
       <workItem from="1540834849392" duration="23960000" />
-      <workItem from="1542721142175" duration="6280000" />
+      <workItem from="1542721142175" duration="11422000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30240000" />
+    <option name="totallyTimeSpent" value="35382000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="12" y="23" width="1400" height="873" extended-state="0" />
@@ -210,7 +212,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.14852753" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.13444301" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -255,15 +257,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/App.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        <state relative-caret-position="347">
+          <caret line="58" column="24" lean-forward="true" selection-start-line="58" selection-end-line="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="96" selection-start-line="96" selection-end-line="96" />
+        <state relative-caret-position="275">
+          <caret line="79" selection-start-line="79" selection-end-line="79" />
         </state>
       </provider>
     </entry>
