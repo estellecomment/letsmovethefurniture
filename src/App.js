@@ -12,7 +12,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.defaultRoomSize = { width: 700, height: 500 };
-        this.maxRoomSizePx = { width: 800, height: 600 };
+        this.maxRoomSizePx = { width: 1200, height: 600 };
         this.state = {
             furnitureList: [],
             room: this.defaultRoomSize,
