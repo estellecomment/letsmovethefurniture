@@ -20,6 +20,11 @@ class App extends Component {
         };
     }
 
+    printState(e) {
+        e.preventDefault();
+        console.log(this.state);
+    }
+
     computeScale(room) {
         // Stretch width to max
         let pxPerCm = this.maxRoomSizePx.width / room.width;
@@ -83,6 +88,7 @@ class App extends Component {
                         <form onSubmit={clearFurniture}>
                             <input type="submit" value="Remove all furniture"/>
                         </form>
+                      <div><a href="" onClick={(e) => { this.printState(e) }}>Print state to console</a></div>
                     </div>
                 </div>
                 <div>Double click furniture to rotate it, drag it to trash can to remove it</div>
