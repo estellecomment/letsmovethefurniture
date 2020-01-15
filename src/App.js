@@ -22,7 +22,7 @@ class App extends Component {
 
     printState(e) {
         e.preventDefault();
-        console.log(this.state);
+        console.log(JSON.stringify(this.state, null, 2));
     }
 
     computeScale(room) {
@@ -66,6 +66,16 @@ class App extends Component {
             });
         };
 
+        const loadState = (event) => {
+            event.preventDefault();
+            console.log('inputState', this.inputState)
+            const inputStateObj = JSON.parse(this.inputState)
+            console.log('inputStateObj', inputStateObj)
+            this.setState(state => {
+                return inputStateObj;
+            })
+        };
+
         return (
             <div className="App">
                 <div className="top-bar">
@@ -88,7 +98,19 @@ class App extends Component {
                         <form onSubmit={clearFurniture}>
                             <input type="submit" value="Remove all furniture"/>
                         </form>
-                      <div><a href="" onClick={(e) => { this.printState(e) }}>Print state to console</a></div>
+                    </div>
+                    <div className="top-bar-column">
+                        <div>Import/export state</div>
+                        <div>
+                            <button onClick={(e) => { this.printState(e) }}>Print state to console</button>
+                        </div>
+                        <form onSubmit={loadState}>
+                            <label>
+                                Load state:
+                                <input type="text" ref={this.inputState} defaultValue=""/>
+                            </label>
+                            <input type="submit" value="Load"/>
+                        </form>
                     </div>
                 </div>
                 <div>Double click furniture to rotate it, drag it to trash can to remove it</div>
